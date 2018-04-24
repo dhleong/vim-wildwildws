@@ -11,7 +11,18 @@ func! s:appendOutput(lines)
     call s:intowin('input')
 endfunc
 
+func! s:isReady()
+    return !empty(get(b:, '_wwws', {}))
+endfunc
+
 func! wwws#conn#Open() " {{{
+    call wwws#EnsureOutput()
+
+    if !s:isReady()
+        " not ready yet
+        return
+    endif
+
     if type(get(b:_wwws, 'job', 0)) == v:t_job
         echo "Already connected"
         return
@@ -22,8 +33,6 @@ func! wwws#conn#Open() " {{{
     if get(params, 'uri', '') == ''
         return
     endif
-
-    call wwws#EnsureOutput()
 
     let outputBufNr = b:_wwws['output_bufnr']
     call s:intowin('output')
@@ -59,6 +68,11 @@ func! wwws#conn#Open() " {{{
 endfunc " }}}
 
 func! wwws#conn#Close() " {{{
+    if !s:isReady()
+        " nothing to do
+        return
+    endif
+
     " disconnect; leave the output buffer open
     let job = get(b:_wwws, 'job', 0)
     if type(job) != v:t_job

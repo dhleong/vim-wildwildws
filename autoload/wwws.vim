@@ -12,7 +12,7 @@ func! wwws#EnsureOutput()
         return
     endif
 
-    let bufname = 'wss://' . s:safename(params['uri'])
+    let bufname = bufname('%') . ': wss://' . params['uri']
     let bufnr = bufnr('%')
 
     let existing = bufnr(bufname)
