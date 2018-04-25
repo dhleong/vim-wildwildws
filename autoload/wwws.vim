@@ -48,7 +48,13 @@ func! wwws#EnsureOutput()
 endfunc
 
 func! wwws#OpenNew(...)
-    let openMethod = "edit"
+
+    let openMethod = "tabedit"
+    if bufname(bufnr('%')) == ''
+        " editing a file? prefer tabe
+        let openMethod = "edit"
+    endif
+
     let uri = ""
     if a:0 == 0
         echom "You must at least provide a ws:// or wss:// URI"
