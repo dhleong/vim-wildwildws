@@ -14,6 +14,9 @@ let g:wwws_auto_connect = get(g:, 'wwws_auto_connect', 1)
 " Create some helpful maps in a wwws input window
 let g:wwws_create_maps = get(g:, 'wwws_create_maps', 1)
 
+" If not already connected, saving a .wwws buffer will try to connect
+let g:wwws_connect_on_save = get(g:, 'wwws_connect_on_save', 1)
+
 
 " ======= Commands =========================================
 

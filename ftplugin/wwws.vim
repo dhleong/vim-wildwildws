@@ -23,6 +23,7 @@ augroup WWWS
     autocmd BufHidden <buffer> :call wwws#conn#_closed()
     autocmd BufDelete <buffer> :call wwws#conn#_closed()
     autocmd BufUnload <buffer> :call wwws#conn#_closed()
+    autocmd BufWrite <buffer> :call wwws#conn#TryConnect()
 augroup END
 
 if g:wwws_auto_connect

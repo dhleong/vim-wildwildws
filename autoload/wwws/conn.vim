@@ -94,6 +94,24 @@ func! wwws#conn#Send(message) " {{{
     call ch_sendraw(job, a:message . "\n")
 endfunc " }}}
 
+func! wwws#conn#TryConnect() " {{{
+    if !g:wwws_connect_on_save
+        return
+    endif
+
+    call wwws#EnsureOutput()
+    if !s:isReady()
+        return
+    endif
+
+    if type(get(b:_wwws, 'job', 0)) == v:t_job
+        " already connected
+        return
+    endif
+
+    call wwws#conn#Open()
+endfunc " }}}
+
 func! wwws#conn#_closed() " {{{
     call wwws#conn#Close()
 
