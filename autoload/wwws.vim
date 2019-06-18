@@ -39,6 +39,9 @@ func! wwws#EnsureOutput()
     setlocal bufhidden=wipe
     set filetype=javascript
 
+    " disable linting in the output window
+    let b:ale_enabled = 0
+
     " return to the input window
     exe bufwinnr(bufnr) . 'wincmd w'
     let b:_wwws = {
