@@ -7,7 +7,7 @@ endfunc
 
 func! wwws#EnsureOutput()
     let params = wwws#_getParams()
-    if get(params, 'uri', '') == ''
+    if get(params, 'uri', '') ==# ''
         " nothing to do yet
         return
     endif
@@ -37,10 +37,10 @@ func! wwws#EnsureOutput()
     setlocal nobuflisted
     setlocal buftype=nofile
     setlocal bufhidden=wipe
-    set ft=javascript
+    set filetype=javascript
 
     " return to the input window
-    exe bufwinnr(bufnr) . "wincmd w"
+    exe bufwinnr(bufnr) . 'wincmd w'
     let b:_wwws = {
         \ 'input_bufnr': bufnr,
         \ 'output_bufnr': outputBuf,
@@ -49,15 +49,15 @@ endfunc
 
 func! wwws#OpenNew(...)
 
-    let openMethod = "tabedit"
-    if bufname(bufnr('%')) == ''
+    let openMethod = 'tabedit'
+    if bufname(bufnr('%')) ==# ''
         " editing a file? prefer tabe
-        let openMethod = "edit"
+        let openMethod = 'edit'
     endif
 
-    let uri = ""
+    let uri = ''
     if a:0 == 0
-        echom "You must at least provide a ws:// or wss:// URI"
+        echom 'You must at least provide a ws:// or wss:// URI'
         return
     elseif a:0 == 1
         let uri = a:1
@@ -69,7 +69,7 @@ func! wwws#OpenNew(...)
     let name = s:safename(uri)
     exe openMethod . ' ' . name . '.wwws'
 
-    call append(0, "URI: " . uri)
+    call append(0, 'URI: ' . uri)
 
     set nomodified
 
@@ -97,7 +97,7 @@ func! wwws#_getParams() " {{{
         let name = matches[1]
         let value = matches[2]
 
-        if name == 'URI'
+        if name ==# 'URI'
             let params['uri'] = value
         else
             let headers[name] = value

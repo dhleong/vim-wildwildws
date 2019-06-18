@@ -24,13 +24,13 @@ func! wwws#conn#Open() " {{{
     endif
 
     if type(get(b:_wwws, 'job', 0)) == v:t_job
-        echo "Already connected"
+        echo 'Already connected'
         return
     endif
 
     " gather connection params
     let params = wwws#_getParams()
-    if get(params, 'uri', '') == ''
+    if get(params, 'uri', '') ==# ''
         return
     endif
 
@@ -42,7 +42,7 @@ func! wwws#conn#Open() " {{{
     let cmd = ['wildwildws-d', params['uri']]
 
     for [key, value] in items(params['headers'])
-        let cmd = cmd + ['-h', key . ":" . value]
+        let cmd = cmd + ['-h', key . ':' . value]
     endfor
 
     func! OnOutput(channel, msg) closure
@@ -82,13 +82,13 @@ func! wwws#conn#Close() " {{{
     call job_stop(job)
     unlet b:_wwws['job']
 
-    call s:appendOutput(["", "// Disconnected"])
+    call s:appendOutput(['', '// Disconnected'])
 endfunc " }}}
 
 func! wwws#conn#Send(message) " {{{
     let job = b:_wwws['job']
     if type(job) != v:t_job
-        echo "Not connected"
+        echo 'Not connected'
         return
     endif
     call ch_sendraw(job, a:message . "\n")

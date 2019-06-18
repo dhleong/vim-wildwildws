@@ -4,7 +4,7 @@ func! wwws#buffer#SendParagraph()
 
     let cursor = getcurpos()
     let sel_save = &selection
-    let &selection = "inclusive"
+    let &selection = 'inclusive'
     let cb_save  = &clipboard
     set clipboard-=unnamed clipboard-=unnamedplus
     let reg_save = getreg(reg)
