@@ -86,11 +86,15 @@ func! wwws#conn#Close() " {{{
 endfunc " }}}
 
 func! wwws#conn#Send(message) " {{{
-    let job = b:_wwws['job']
+    " always try to reconnect if disconnected when sending
+    call wwws#conn#TryConnect()
+
+    let job = get(b:_wwws, 'job', 0)
     if type(job) != v:t_job
         echo 'Not connected'
         return
     endif
+
     call ch_sendraw(job, a:message . "\n")
 endfunc " }}}
 

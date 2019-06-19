@@ -17,10 +17,11 @@ func! wwws#EnsureOutput()
 
     let existing = bufnr(bufname)
     if existing != -1
-        let b:_wwws = {
-            \ 'input_bufnr': bufnr,
-            \ 'output_bufnr': existing,
-            \ }
+        if !has_key(b:, '_wwws')
+            let b:_wwws = {}
+        endif
+        let b:_wwws.input_bufnr = bufnr
+        let b:_wwws.output_bufnr = existing
         return
     endif
 
