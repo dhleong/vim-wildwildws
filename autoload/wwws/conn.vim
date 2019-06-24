@@ -24,7 +24,7 @@ func! s:isReady()
 endfunc
 
 func! wwws#conn#Open() " {{{
-    call wwws#EnsureOutput()
+    call wwws#output#EnsureAvailable()
 
     if !s:isReady()
         " not ready yet
