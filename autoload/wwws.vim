@@ -5,6 +5,17 @@ func! s:safename(uri)
     return name
 endfunc
 
+func! s:formatUri(uri)
+    let uri = a:uri
+
+    if matchstr(uri, '^.*://') ==# ''
+        " no protocol? assume non-secure
+        let uri = 'ws://' . uri
+    endif
+
+    return uri
+endfunc
+
 func! wwws#EnsureOutput()
     let params = wwws#_getParams()
     if get(params, 'uri', '') ==# ''
@@ -12,7 +23,10 @@ func! wwws#EnsureOutput()
         return
     endif
 
-    let bufname = bufname('%') . ': wss://' . params['uri']
+    let protocol = matchstr(params['uri'], 'w[s]*')
+    let bufname = bufname('%') . ': '
+        \ . protocol . '://'
+        \ . s:safename(params['uri'])
     let bufnr = bufnr('%')
 
     let existing = bufnr(bufname)
@@ -102,7 +116,7 @@ func! wwws#_getParams() " {{{
         let value = matches[2]
 
         if name ==# 'URI'
-            let params['uri'] = value
+            let params['uri'] = s:formatUri(value)
         else
             let headers[name] = value
         endif
