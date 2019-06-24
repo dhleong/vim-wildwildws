@@ -1,14 +1,22 @@
 
 func! s:intowin(kind)
     let bufnr = b:_wwws[a:kind . '_bufnr']
-    exec bufwinnr(bufnr) . 'wincmd w'
+    let winnr = bufwinnr(bufnr)
+    if winnr == -1
+        " no such window
+        return 0
+    endif
+
+    exec winnr . 'wincmd w'
+    return 1
 endfunc
 
 func! s:appendOutput(lines)
-    call s:intowin('output')
-    set modifiable
-    call append(line('$'), a:lines)
-    call s:intowin('input')
+    if s:intowin('output')
+        set modifiable
+        call append(line('$'), a:lines)
+        call s:intowin('input')
+    endif
 endfunc
 
 func! s:isReady()
