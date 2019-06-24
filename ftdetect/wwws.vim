@@ -1,2 +1,2 @@
 
-au BufNewFile,BufRead *.wwws setfiletype wwws
+autocmd BufNewFile,BufRead *.wwws setfiletype wwws

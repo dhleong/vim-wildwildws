@@ -1,5 +1,9 @@
 " Output buffer/window management
 
+func! s:disconnectFrom(inputBufNr)
+    call wwws#conn#CloseFor(a:inputBufNr)
+endfunc
+
 func! wwws#output#EnsureAvailable()
     let params = wwws#_getParams()
     if get(params, 'uri', '') ==# ''
@@ -40,6 +44,11 @@ func! wwws#output#EnsureAvailable()
 
     " disable linting in the output window
     let b:ale_enabled = 0
+
+    augroup WwwsOutput
+        autocmd! * <buffer>
+        exe 'autocmd BufWipeout <buffer> call <SID>disconnectFrom(' . bufnr . ')'
+    augroup END
 
     " return to the input window
     exe bufwinnr(bufnr) . 'wincmd w'

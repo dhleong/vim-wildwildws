@@ -75,20 +75,25 @@ func! wwws#conn#Open() " {{{
     let b:_wwws['job'] = job
 endfunc " }}}
 
+func! wwws#conn#CloseFor(inputBufNr)
+    " disconnect; leave the output buffer open
+    let _wwws = getbufvar(a:inputBufNr, '_wwws', {})
+    let job = get(_wwws, 'job', 0)
+    if type(job) != v:t_job
+        return
+    endif
+
+    call job_stop(job)
+    unlet _wwws['job']
+endfunc
+
 func! wwws#conn#Close() " {{{
     if !s:isReady()
         " nothing to do
         return
     endif
 
-    " disconnect; leave the output buffer open
-    let job = get(b:_wwws, 'job', 0)
-    if type(job) != v:t_job
-        return
-    endif
-
-    call job_stop(job)
-    unlet b:_wwws['job']
+    call wwws#conn#CloseFor(bufnr('%'))
 
     call s:appendOutput(['', '// Disconnected'])
 endfunc " }}}
@@ -111,7 +116,7 @@ func! wwws#conn#TryConnect() " {{{
         return
     endif
 
-    call wwws#EnsureOutput()
+    call wwws#output#EnsureAvailable()
     if !s:isReady()
         return
     endif
@@ -127,9 +132,20 @@ endfunc " }}}
 func! wwws#conn#_closed() " {{{
     call wwws#conn#Close()
 
-    let outputBufNr = b:_wwws['output_bufnr']
-    exec 'bwipeout ' . outputBufNr
-
     let b:wwws_init = 0
+
+    if !has_key(b:, '_wwws')
+        " not prepped yet
+        return
+    endif
+
+    let outputBufNr = b:_wwws['output_bufnr']
+    if bufname(outputBufNr) !=# ''
+        try
+            exec 'bwipeout ' . outputBufNr
+        catch /.*/
+            " on an error, the output buffer doesn't exist anymore
+        endtry
+    endif
 endfunc " }}}
 
